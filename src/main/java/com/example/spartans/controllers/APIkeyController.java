@@ -8,15 +8,17 @@ import com.example.spartans.entities.User;
 import com.example.spartans.repositories.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-// @RequestMapping("/api")
+@RequestMapping("/api")
 public class APIkeyController {
     @Autowired
     UserRepository userRepo;
@@ -36,8 +38,10 @@ public class APIkeyController {
     }
 
     @PostMapping("/set-api-key/{id}")
-    public ResponseEntity<String> setApiKey(@RequestParam String id) {
+    public ResponseEntity<String> setApiKey(@PathVariable String id) {
         ResponseEntity<String> res = null;
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("content-type", "application/json");
         try {
             Optional<User> optionalUser = userRepo.findById(id);
 
@@ -47,9 +51,9 @@ public class APIkeyController {
                 if(user.getRole().equals("admin")) {
                     user.setApiKey(generateAPIkey());
                     userRepo.save(user);
-                    res = new ResponseEntity<>(this.message + "api key was set", HttpStatus.ACCEPTED);
+                    res = new ResponseEntity<>(this.message + "api key was set", headers, HttpStatus.ACCEPTED);
                 } else {
-                    res = new ResponseEntity<>(this.message + "not authorized", HttpStatus.FORBIDDEN);
+                    res = new ResponseEntity<>(this.message + "not authorized", headers, HttpStatus.FORBIDDEN);
                 }
             }
         } catch (Exception e) {

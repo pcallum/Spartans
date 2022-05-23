@@ -10,6 +10,7 @@ public class User {
     @Id
     public String id;
 
+    @NonNull
     public String email;
 
     @NonNull
@@ -17,6 +18,7 @@ public class User {
 
     public byte[] apiKey;
 
+    @NonNull
     public String role;
 
     public User(){}
