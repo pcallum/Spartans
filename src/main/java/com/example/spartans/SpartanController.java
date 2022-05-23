@@ -25,7 +25,7 @@ public class SpartanController {
     }
 
     @GetMapping("/getById/{id}")
-    public Optional<Spartan> getAllSpartans(@PathVariable String id) {
+    public Optional<Spartan> getSpartan(@PathVariable String id) {
         return repository.findById(id);
     }
 }
