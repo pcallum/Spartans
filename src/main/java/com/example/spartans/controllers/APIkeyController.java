@@ -51,12 +51,13 @@ public class APIkeyController {
                 if(user.getRole().equals("admin")) {
                     user.setApiKey(generateAPIkey());
                     userRepo.save(user);
-                    res = new ResponseEntity<>(this.message + "api key was set", headers, HttpStatus.ACCEPTED);
+                    res = new ResponseEntity<>(this.message + "api key was set\"}", headers, HttpStatus.ACCEPTED);
                 } else {
-                    res = new ResponseEntity<>(this.message + "not authorized", headers, HttpStatus.FORBIDDEN);
+                    res = new ResponseEntity<>(this.message + "not authorized\"}", headers, HttpStatus.FORBIDDEN);
                 }
             }
         } catch (Exception e) {
+            res = new ResponseEntity<>(this.message + "something went wrong\"}", headers, HttpStatus.BAD_GATEWAY);
             e.printStackTrace();
         }
         return res;
