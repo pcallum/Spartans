@@ -1,4 +1,4 @@
-package com.example.spartans;
+package com.example.spartans.controllers;
 
 import com.example.spartans.entities.Spartan;
 import com.example.spartans.repositories.SpartanRepository;
