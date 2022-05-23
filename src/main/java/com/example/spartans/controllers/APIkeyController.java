@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -49,7 +48,7 @@ public class APIkeyController {
                 User user = optionalUser.get();
 
                 if(user.getRole().equals("admin")) {
-                    user.setApiKey(generateAPIkey());
+                    user.setApiKey(this.generateAPIkey());
                     userRepo.save(user);
                     res = new ResponseEntity<>(this.message + "api key was set\"}", headers, HttpStatus.ACCEPTED);
                 } else {
