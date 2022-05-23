@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document(collection="Spartans")
+@Document(collection="spartans")
 public class Spartan {
     @Id
     public String id;
@@ -20,7 +20,6 @@ public class Spartan {
 
     public String startDate;
 
-    public String role;
 
     public Spartan() {}
 
@@ -31,7 +30,6 @@ public class Spartan {
         this.course = course;
         this.email = email;
         this.startDate = startDate;
-        this.role = role;
     }
 
     public String getId() {
@@ -80,13 +78,5 @@ public class Spartan {
 
     public void setStartDate(String startDate) {
         this.startDate = startDate;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 }
