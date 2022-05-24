@@ -5,7 +5,7 @@ import com.mongodb.lang.NonNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection="users")
+@Document(collection = "users")
 public class User {
     @Id
     public String id;
@@ -21,7 +21,8 @@ public class User {
     @NonNull
     public String role;
 
-    public User(){}
+    public User() {
+    }
 
     public User(String id, String email, String password, byte[] apiKey, String role) {
         this.id = id;
@@ -69,5 +70,16 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                " id='" + getId() + "'" +
+                ", email='" + getEmail() + "'" +
+                ", password='" + getPassword() + "'" +
+                ", apiKey='" + getApiKey() + "'" +
+                ", role='" + getRole() + "'" +
+                "}";
     }
 }

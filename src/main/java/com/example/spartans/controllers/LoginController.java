@@ -22,28 +22,25 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
         ResponseEntity<String> res = null;
-        Optional<User> optionalUser =userRepo.findByEmail(loginRequest.getEmail());
+        Optional<User> optionalUser = userRepo.findByEmail(loginRequest.getEmail());
 
-        if(!optionalUser.isPresent()) {
-            res = ResponseEntity.status(401).body(
-                "{\"message\": \"email" + loginRequest.getEmail() + " not found\"}");
+        if (!optionalUser.isPresent()) {
+            res = ResponseEntity.status(404).body(
+                    "{\"message\": \"email" + loginRequest.getEmail() + " not found\"}");
         } else {
             try {
                 User user = optionalUser.get();
 
-                if(loginRequest.getPassword().equals(user.getPassword())) {
+                if (loginRequest.getPassword().equals(user.getPassword())) {
                     res = ResponseEntity.status(200).body(
-                        "{\"message\": \"successfull login\"}"
-                    );
+                            "{\"user\": \"" + user + "\"}");
                 } else {
                     res = ResponseEntity.status(401).body(
-                        "{\"message\": \"password is wrong\"}"
-                    );
+                            "{\"message\": \"password is wrong\"}");
                 }
             } catch (Exception e) {
                 res = ResponseEntity.status(500).body(
-                    "{\"message\": \"passwords is wrong\"}"
-                );
+                        "{\"message\": \"something went wrong\"}");
             }
         }
         return res;

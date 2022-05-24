@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 import com.example.spartans.entities.User;
+import com.example.spartans.payload.request.LoginRequest;
 import com.example.spartans.repositories.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,15 @@ public class APIkeyController {
 
     private final String message = "{\"message\": \"";
 
-    public byte[] generateAPIkey() {
+    private void login() {
+        LoginController loginController = new LoginController();
+        LoginRequest loginRequest = new LoginRequest();
+        loginController.login(loginRequest);
+    }
+
+    private byte[] generateAPIkey() {
         KeyPairGenerator keyGen = null;
+
         try {
             keyGen = KeyPairGenerator.getInstance("RSA");
         } catch (NoSuchAlgorithmException e) {
@@ -38,11 +46,13 @@ public class APIkeyController {
     }
 
     @GetMapping("/get-api-key/{id}")
-    public byte[] getApiKey(@PathVariable String id) {
+    private byte[] getApiKey(@PathVariable String id) {
+        this.login();
+
         byte[] privateKey = null;
         Optional<User> optionalUser = userRepo.findById(id);
 
-        if(optionalUser.isPresent()) {
+        if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             privateKey = user.getApiKey();
         }
@@ -50,17 +60,19 @@ public class APIkeyController {
     }
 
     @PostMapping("/set-api-key/{id}")
-    public ResponseEntity<String> setApiKey(@PathVariable String id) {
+    private ResponseEntity<String> setApiKey(@PathVariable String id) {
+        this.login();
+
         ResponseEntity<String> res = null;
         HttpHeaders headers = new HttpHeaders();
         headers.add("content-type", "application/json");
         try {
             Optional<User> optionalUser = userRepo.findById(id);
 
-            if(optionalUser.isPresent()) {
+            if (optionalUser.isPresent()) {
                 User user = optionalUser.get();
 
-                if(user.getRole().equals("admin")) {
+                if (user.getRole().equals("admin")) {
                     user.setApiKey(this.generateAPIkey());
                     userRepo.save(user);
                     res = new ResponseEntity<>(this.message + "api key was set\"}", headers, HttpStatus.ACCEPTED);
