@@ -5,6 +5,8 @@ import com.mongodb.lang.NonNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Objects;
+
 @Document(collection="spartans")
 public class Spartan {
     @Id
@@ -82,5 +84,18 @@ public class Spartan {
 
     public void setStartDate(String startDate) {
         this.startDate = startDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Spartan spartan = (Spartan) o;
+        return id.equals(spartan.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
