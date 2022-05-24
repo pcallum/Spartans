@@ -42,4 +42,10 @@ public class SpartanController {
     public String deleteSpartanById(@PathVariable String id){
         return service.deleteSpartanById(id);
     }
+
+    @GetMapping("/getByName/{name}")
+    public List<Spartan> getByPartialName(@PathVariable String name){
+        return service.getSpartanByPartialName(name, name);
+    }
+
 }

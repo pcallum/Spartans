@@ -3,8 +3,10 @@ package com.example.spartans.service;
 import com.example.spartans.entities.Spartan;
 import com.example.spartans.repositories.SpartanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,16 +16,13 @@ public class SpartanService {
     private SpartanRepository spartanRepo;
 
     public Spartan addSpartan(Spartan spartan) {
-        Spartan savedRecord = new Spartan();
-
         try {
-            savedRecord = spartanRepo.save(spartan);
+            return spartanRepo.save(spartan);
         } catch(IllegalArgumentException e) {
-            e.printStackTrace();
             // in case the given entity is null.
+            e.printStackTrace();
+            return null;
         }
-
-        return savedRecord;
     }
 
     public List<Spartan> getAllSpartans(){
@@ -31,7 +30,12 @@ public class SpartanService {
     }
 
     public Optional<Spartan> getSpartanById(String id) {
-        return spartanRepo.findById(id);
+        try {
+            return spartanRepo.findById(id);
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public String updateSpartan(Spartan spartan){
@@ -59,17 +63,20 @@ public class SpartanService {
         try {
             if (spartanRepo.findById(id).isPresent()) {
                 spartanRepo.deleteById(id);
-                message = String.format("%S ID Spartan has been updated.", id);
+                message = String.format("%S ID Spartan has been deleted.", id);
             } else {
                 message = String.format("No spartan found with %S ID.", id);
             }
 
         } catch(IllegalArgumentException e) {
             e.printStackTrace();
-            //id - must not be null.
             message = "ID must not be null.";
         }
 
         return message;
+    }
+
+    public List<Spartan> getSpartanByPartialName(String firstName, String lastName){
+        return spartanRepo.findByFirstNameContainsOrLastNameContains(firstName, lastName);
     }
 }
