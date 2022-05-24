@@ -2,25 +2,19 @@ package com.example.spartans.controllers;
 
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Optional;
-
 import com.example.spartans.entities.User;
 import com.example.spartans.payload.request.LoginRequest;
 import com.example.spartans.repositories.UserRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/api")
@@ -71,7 +65,7 @@ public class APIkeyController {
         return res;
     }
 
-    @PostMapping("/set-api-key/{id}")
+    @PatchMapping("/set-api-key/{id}")
     private ResponseEntity<String> setApiKey(@PathVariable String id,
             @RequestBody LoginRequest loginRequest) {
         ResponseEntity<String> res = null;
