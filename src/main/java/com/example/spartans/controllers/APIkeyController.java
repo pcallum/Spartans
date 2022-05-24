@@ -63,6 +63,7 @@ public class APIkeyController {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             privateKey = user.getApiKey();
+            // sending API key as string in res
             String encodedKey = Base64.getEncoder().encodeToString(privateKey);
             res = ResponseEntity.status(200).body(
                     "{\"apiKey\": " + encodedKey + "\"}");
