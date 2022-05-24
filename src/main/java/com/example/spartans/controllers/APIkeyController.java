@@ -62,6 +62,10 @@ public class APIkeyController {
 
         System.out.println("res " + res);
 
+        if (res.getStatusCodeValue() == 404 || res.getStatusCodeValue() == 401) {
+            return res;
+        }
+
         try {
             Optional<User> optionalUser = userRepo.findById(id);
 
