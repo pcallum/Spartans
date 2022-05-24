@@ -9,25 +9,30 @@ import com.example.spartans.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-// @RestController
-// @RequestMapping("/api")
 public class LoginController {
     @Autowired
     UserRepository userRepo;
 
-    // @PostMapping("/login")
+    // this function will be used to get a res so that we can verify if
+    // the user is authenticated
+    public static ResponseEntity<String> handleLogin(ResponseEntity<String> res,
+            LoginRequest loginRequest, UserRepository userRepo) {
+        LoginController loginController = new LoginController();
+        res = loginController.login(userRepo, loginRequest);
+        return res;
+    }
+
     public ResponseEntity<String> login(UserRepository userRepo, LoginRequest loginRequest) {
+        // setting up headers
         HttpHeaders headers = new HttpHeaders();
         headers.add("content-type", "application/json");
 
         ResponseEntity<String> res = null;
+        // finding user by email
         Optional<User> optionalUser = userRepo.findByEmail(loginRequest.getEmail());
 
+        // if user is not found we throw an error message
         if (!optionalUser.isPresent()) {
             res = ResponseEntity.status(404).headers(headers).body(
                     "{\"message\": \"email" + loginRequest.getEmail() + " not found\"}");
@@ -35,6 +40,8 @@ public class LoginController {
             try {
                 User user = optionalUser.get();
 
+                // if passwords match we send a res with the user inside
+                // otherwise we throw an error message
                 if (loginRequest.getPassword().equals(user.getPassword())) {
                     res = ResponseEntity.status(200).headers(headers).body(
                             "{\"user\": \"" + user + "\"}");

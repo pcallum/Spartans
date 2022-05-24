@@ -2,6 +2,8 @@ package com.example.spartans.controllers;
 
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.Optional;
 
 import com.example.spartans.entities.User;
@@ -28,6 +30,7 @@ public class APIkeyController {
 
     private final String message = "{\"message\": \"";
 
+    // this function will be used in set api key API
     private byte[] generateAPIkey() {
         KeyPairGenerator keyGen = null;
 
@@ -42,26 +45,40 @@ public class APIkeyController {
     }
 
     @GetMapping("/get-api-key/{id}")
-    private byte[] getApiKey(@PathVariable String id) {
+    private ResponseEntity<String> getApiKey(@PathVariable String id, @RequestBody LoginRequest loginRequest) {
+        ResponseEntity<String> res = null;
+
+        // checking if credentials are right
+        res = LoginController.handleLogin(res, loginRequest, userRepo);
+
+        // if one of the credentials is wrong we throw an error message
+        if (res.getStatusCodeValue() == 404 || res.getStatusCodeValue() == 401) {
+            return res;
+        }
+
         byte[] privateKey = null;
+        // finding the user by id so that we can get the API key from db
         Optional<User> optionalUser = userRepo.findById(id);
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             privateKey = user.getApiKey();
+            String encodedKey = Base64.getEncoder().encodeToString(privateKey);
+            res = ResponseEntity.status(200).body(
+                    "{\"apiKey\": " + encodedKey + "\"}");
         }
-        return privateKey;
+        return res;
     }
 
     @PostMapping("/set-api-key/{id}")
     private ResponseEntity<String> setApiKey(@PathVariable String id,
             @RequestBody LoginRequest loginRequest) {
         ResponseEntity<String> res = null;
-        LoginController loginController = new LoginController();
-        res = loginController.login(userRepo, loginRequest);
 
-        System.out.println("res " + res);
+        // checking if credentials are right
+        res = LoginController.handleLogin(res, loginRequest, userRepo);
 
+        // if one of the credentials is wrong we throw an error message
         if (res.getStatusCodeValue() == 404 || res.getStatusCodeValue() == 401) {
             return res;
         }
@@ -72,16 +89,23 @@ public class APIkeyController {
             if (optionalUser.isPresent()) {
                 User user = optionalUser.get();
 
+                // if the user has a role of admin we generate the API key,
+                // save it into the db and sending a res
                 if (user.getRole().equals("admin")) {
                     user.setApiKey(this.generateAPIkey());
                     userRepo.save(user);
-                    res = new ResponseEntity<>(this.message + "api key was set\"}", HttpStatus.ACCEPTED);
+                    res = ResponseEntity.status(201).body(
+                            this.message + "api key was set\"}");
                 } else {
-                    res = new ResponseEntity<>(this.message + "not authorized\"}", HttpStatus.FORBIDDEN);
+                    // if the user doesn't have a role of admin we throw
+                    // an error message
+                    res = ResponseEntity.status(401).body(
+                            this.message + "not authorized\"}");
                 }
             }
         } catch (Exception e) {
-            res = new ResponseEntity<>(this.message + "something went wrong\"}", HttpStatus.BAD_GATEWAY);
+            res = ResponseEntity.status(500).body(
+                    this.message + "something went wrong\"}");
             e.printStackTrace();
         }
         return res;
