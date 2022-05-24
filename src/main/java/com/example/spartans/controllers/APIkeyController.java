@@ -55,15 +55,10 @@ public class APIkeyController {
 
     @PostMapping("/set-api-key/{id}")
     private ResponseEntity<String> setApiKey(@PathVariable String id,
-            @RequestBody LoginController loginController) {
-        String uri = "http://localhost:8080/api/login";
-        RestTemplate restTemplate = new RestTemplate();
-
+            @RequestBody LoginRequest loginRequest) {
         ResponseEntity<String> res = null;
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("content-type", "application/json");
-
-        restTemplate.postForObject(uri, loginController, LoginController.class);
+        LoginController loginController = new LoginController();
+        res = loginController.login(userRepo, loginRequest);
 
         System.out.println("res " + res);
 
@@ -76,13 +71,13 @@ public class APIkeyController {
                 if (user.getRole().equals("admin")) {
                     user.setApiKey(this.generateAPIkey());
                     userRepo.save(user);
-                    res = new ResponseEntity<>(this.message + "api key was set\"}", headers, HttpStatus.ACCEPTED);
+                    res = new ResponseEntity<>(this.message + "api key was set\"}", HttpStatus.ACCEPTED);
                 } else {
-                    res = new ResponseEntity<>(this.message + "not authorized\"}", headers, HttpStatus.FORBIDDEN);
+                    res = new ResponseEntity<>(this.message + "not authorized\"}", HttpStatus.FORBIDDEN);
                 }
             }
         } catch (Exception e) {
-            res = new ResponseEntity<>(this.message + "something went wrong\"}", headers, HttpStatus.BAD_GATEWAY);
+            res = new ResponseEntity<>(this.message + "something went wrong\"}", HttpStatus.BAD_GATEWAY);
             e.printStackTrace();
         }
         return res;

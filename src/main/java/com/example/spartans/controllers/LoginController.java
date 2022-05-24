@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/api")
+// @RestController
+// @RequestMapping("/api")
 public class LoginController {
     @Autowired
     UserRepository userRepo;
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+    // @PostMapping("/login")
+    public ResponseEntity<String> login(UserRepository userRepo, LoginRequest loginRequest) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("content-type", "application/json");
 
