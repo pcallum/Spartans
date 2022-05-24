@@ -9,5 +9,7 @@ import java.util.List;
 
 @Repository
 public interface SpartanRepository extends MongoRepository<Spartan, String> {
+    List<Spartan> findByCourse(String course);
+
     List<Spartan> findByFirstNameContainsOrLastNameContains(String firstName, String lastName);
 }
