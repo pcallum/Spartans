@@ -1,25 +1,29 @@
 package com.example.spartans.entities;
 
+import com.mongodb.lang.NonNull;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection="spartans")
 public class Spartan {
     @Id
     public String id;
 
-
+    @NonNull
     public String firstName;
 
+    @NonNull
     public String lastName;
 
+    @NonNull
     public String course;
 
+    @NonNull
     public String email;
 
+    @NonNull
     public String startDate;
-
 
     public Spartan() {}
 

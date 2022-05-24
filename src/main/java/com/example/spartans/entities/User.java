@@ -1,5 +1,7 @@
 package com.example.spartans.entities;
 
+import com.mongodb.lang.NonNull;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -8,16 +10,20 @@ public class User {
     @Id
     public String id;
 
-
+    @NonNull
     public String email;
 
+    @NonNull
     public String password;
 
-    public String apiKey;
+    public byte[] apiKey;
 
+    @NonNull
     public String role;
+
     public User(){}
-    public User(String id, String email, String password, String apiKey, String role) {
+
+    public User(String id, String email, String password, byte[] apiKey, String role) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -49,11 +55,11 @@ public class User {
         this.password = password;
     }
 
-    public String getApiKey() {
+    public byte[] getApiKey() {
         return apiKey;
     }
 
-    public void setApiKey(String apiKey) {
+    public void setApiKey(byte[] apiKey) {
         this.apiKey = apiKey;
     }
 
