@@ -15,8 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/api")
@@ -25,12 +27,6 @@ public class APIkeyController {
     UserRepository userRepo;
 
     private final String message = "{\"message\": \"";
-
-    private void login() {
-        LoginController loginController = new LoginController();
-        LoginRequest loginRequest = new LoginRequest();
-        loginController.login(loginRequest);
-    }
 
     private byte[] generateAPIkey() {
         KeyPairGenerator keyGen = null;
@@ -47,8 +43,6 @@ public class APIkeyController {
 
     @GetMapping("/get-api-key/{id}")
     private byte[] getApiKey(@PathVariable String id) {
-        this.login();
-
         byte[] privateKey = null;
         Optional<User> optionalUser = userRepo.findById(id);
 
@@ -60,12 +54,19 @@ public class APIkeyController {
     }
 
     @PostMapping("/set-api-key/{id}")
-    private ResponseEntity<String> setApiKey(@PathVariable String id) {
-        this.login();
+    private ResponseEntity<String> setApiKey(@PathVariable String id,
+            @RequestBody LoginController loginController) {
+        String uri = "http://localhost:8080/api/login";
+        RestTemplate restTemplate = new RestTemplate();
 
         ResponseEntity<String> res = null;
         HttpHeaders headers = new HttpHeaders();
         headers.add("content-type", "application/json");
+
+        restTemplate.postForObject(uri, loginController, LoginController.class);
+
+        System.out.println("res " + res);
+
         try {
             Optional<User> optionalUser = userRepo.findById(id);
 
