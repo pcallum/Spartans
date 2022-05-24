@@ -19,13 +19,18 @@ public class SpartanController {
         return repository.save(spartan);
     }
 
+    @GetMapping("/getByCourse/{course}")
+    public List<Spartan> getByCourse(@PathVariable String course) {
+        return repository.findByCourse(course);
+    }
+
     @GetMapping("/getAll")
     public List<Spartan> getAllSpartans() {
         return repository.findAll();
     }
 
     @GetMapping("/getById/{id}")
-    public Optional<Spartan> getSpartan(@PathVariable String id) {
+    public Optional<Spartan> getSpartanById(@PathVariable String id) {
         return repository.findById(id);
     }
 }
