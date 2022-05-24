@@ -24,14 +24,14 @@ public class APIkeyController {
 
     private final String message = "{\"message\": \"";
 
-    public byte[] generateAPIkey() {
+    private byte[] generateAPIkey() {
         KeyPairGenerator keyGen = null;
         try {
             keyGen = KeyPairGenerator.getInstance("RSA");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        keyGen.initialize(512);
+        keyGen.initialize(2048);
         byte[] privateKey = keyGen.generateKeyPair().getPrivate().getEncoded();
         return privateKey;
     }

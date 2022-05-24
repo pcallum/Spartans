@@ -1,10 +1,8 @@
 package com.example.spartans.controllers;
-
 import com.example.spartans.entities.Spartan;
 import com.example.spartans.repositories.SpartanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 
