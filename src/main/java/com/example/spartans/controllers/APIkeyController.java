@@ -25,7 +25,6 @@ public class APIkeyController {
 
     private final String message = "{\"message\": \"";
 
-    @GetMapping("/get-api-key")
     public byte[] generateAPIkey() {
         KeyPairGenerator keyGen = null;
         try {
@@ -35,6 +34,18 @@ public class APIkeyController {
         }
         keyGen.initialize(2048);
         byte[] privateKey = keyGen.generateKeyPair().getPrivate().getEncoded();
+        return privateKey;
+    }
+
+    @GetMapping("/get-api-key/{id}")
+    public byte[] getApiKey(@PathVariable String id) {
+        byte[] privateKey = null;
+        Optional<User> optionalUser = userRepo.findById(id);
+
+        if(optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            privateKey = user.getApiKey();
+        }
         return privateKey;
     }
 

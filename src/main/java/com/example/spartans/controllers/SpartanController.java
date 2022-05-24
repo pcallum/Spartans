@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/spartan")
+@RequestMapping("/api/spartan")
 public class SpartanController {
     @Autowired
     SpartanRepository repository;
