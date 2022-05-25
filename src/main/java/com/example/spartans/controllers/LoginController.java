@@ -54,15 +54,14 @@ public class LoginController {
                 }
             } catch (Exception e) {
                 res = ResponseEntity.status(500).headers(headers).body(
-<<<<<<< HEAD
-                        "{\"message\": \"something went wrong\"}");
-                log.error(className, "something went wrong:", e);
-                e.printStackTrace();
-=======
+
                         this.message + "something went wrong\"}");
->>>>>>> 9848703c3ac63220f88661466550bf831080198f
+
+                log.error(className, "something went wrong:", e);
+
+                e.printStackTrace();
             }
         }
-        return res;
+            return res;
     }
 }
