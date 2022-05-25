@@ -5,16 +5,12 @@ import com.example.spartans.entities.User;
 import com.example.spartans.payload.request.LoginRequest;
 import com.example.spartans.repositories.UserRepository;
 import com.example.spartans.util.LogDriver;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
 public class LoginController {
     LogDriver log = new LogDriver();
     String className = "LoginController";
-
-    @Autowired
-    UserRepository userRepo;
 
     private final String message = "{\"message\": \"";
 
