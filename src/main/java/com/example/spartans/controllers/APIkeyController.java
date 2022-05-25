@@ -78,6 +78,34 @@ public class APIkeyController {
         return res;
     }
 
+    public ResponseEntity<String> checkApiKey(String email,
+            @RequestBody String apiKeyArg) {
+        ResponseEntity<String> res = null;
+
+        try {
+            Optional<User> optionalUser = userRepo.findByEmail(email);
+            User user = optionalUser.get();
+
+            String userApiKey = user.getApiKey();
+
+            if (userApiKey.equals(apiKeyArg)) {
+                res = ResponseEntity.status(200).body(
+                        this.message + " api key matches\"}");
+                return res;
+            } else {
+                res = ResponseEntity.status(401).body(
+                        this.message + " api key doesn't match\"}");
+                return res;
+            }
+
+        } catch (Exception e) {
+            res = ResponseEntity.status(500).body(
+                    this.message + " something went wrong\"}");
+            e.printStackTrace();
+        }
+        return res;
+    }
+
     @PatchMapping("/set-api-key/{id}")
     private ResponseEntity<String> setApiKey(@PathVariable String id,
             @RequestBody LoginRequest loginRequest) {
@@ -119,11 +147,5 @@ public class APIkeyController {
             e.printStackTrace();
         }
         return res;
-    }
-
-    public static ResponseEntity<String> checkApiKey(String email, String password,
-            @RequestBody String apiKey) {
-        ResponseEntity<String> res = null;
-
     }
 }
