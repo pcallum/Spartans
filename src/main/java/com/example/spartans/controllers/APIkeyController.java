@@ -91,10 +91,6 @@ public class APIkeyController {
 
             byte[] userApiKey = user.getApiKey();
             byte[] decodedArgKey = Base64.getUrlDecoder().decode(apiKeyArg);
-            // String strUserApiKey = Base64.getEncoder().encodeToString(userApiKey);
-
-            System.out.println("aaa " + userApiKey.toString());
-            System.out.println("bb " + apiKeyArg.toString());
 
             if (Arrays.equals(userApiKey, decodedArgKey)) {
                 res = ResponseEntity.status(200).body(

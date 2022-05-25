@@ -1,4 +1,4 @@
-package com.example.spartans.ControllerTest;
+/* package com.example.spartans.ControllerTest;
 
 import com.example.spartans.controllers.SpartanController;
 import com.example.spartans.entities.Spartan;
@@ -63,3 +63,4 @@ class SpartanTest {
         Assertions.assertTrue(result);
     }
 }
+ */
