@@ -86,7 +86,7 @@ public class APIkeyController {
             Optional<User> optionalUser = userRepo.findByEmail(email);
             User user = optionalUser.get();
 
-            String userApiKey = user.getApiKey();
+            byte[] userApiKey = user.getApiKey();
 
             if (userApiKey.equals(apiKeyArg)) {
                 res = ResponseEntity.status(200).body(

@@ -4,12 +4,10 @@ import com.example.spartans.entities.Spartan;
 import com.example.spartans.repositories.SpartanRepository;
 import com.example.spartans.util.LogDriver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-<<<<<<< HEAD
-=======
 import java.util.Date;
->>>>>>> 9848703c3ac63220f88661466550bf831080198f
 import java.util.List;
 import java.util.Optional;
 
