@@ -86,7 +86,7 @@ public class APIkeyController {
 
                 // if the user has a role of admin we generate the API key,
                 // save it into the db and sending a res
-                if (user.getRole().equals("admin")) {
+                if (user.getRole().equals("admin") && user.getEmail().equals(loginRequest.getEmail())) {
                     user.setApiKey(this.generateAPIkey());
                     userRepo.save(user);
                     res = ResponseEntity.status(201).body(
