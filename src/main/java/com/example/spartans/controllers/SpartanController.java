@@ -1,8 +1,11 @@
 package com.example.spartans.controllers;
 
 import com.example.spartans.entities.Spartan;
+import com.example.spartans.payload.request.LoginRequest;
+import com.example.spartans.repositories.UserRepository;
 import com.example.spartans.service.SpartanService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -17,14 +20,21 @@ public class SpartanController {
     @Autowired
     private SpartanService service;
 
+    @Autowired
+    private UserRepository userRepo;
+
     @PostMapping()
     public Spartan addSpartan(@RequestBody Spartan spartan) {
         return service.addSpartan(spartan);
     }
 
     @GetMapping()
-    public List<Spartan> getAllSpartans() {
+    public List<Spartan> getAllSpartans(@RequestBody LoginRequest loginRequest,
+            @RequestParam String api) {
         // authorization
+        ResponseEntity<String> response = AuthorisationController.checkAuthorisation(loginRequest, api, userRepo);
+        System.out.println(response);
+
         return service.getAllSpartans();
     }
 
@@ -51,11 +61,11 @@ public class SpartanController {
     }
 
     @GetMapping("/date/{dateString}")
-    public List<Spartan> getAfterStartDate(@PathVariable String dateString){
+    public List<Spartan> getAfterStartDate(@PathVariable String dateString) {
         try {
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
             return service.getAfterStartDate(date);
-        }  catch (ParseException e) {
+        } catch (ParseException e) {
             e.printStackTrace();
             // the given string could not be converted to date
         }

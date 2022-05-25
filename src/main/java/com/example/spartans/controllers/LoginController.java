@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 public class LoginController {
     LogDriver log = new LogDriver();
     String className = "LoginController";
+
     @Autowired
     UserRepository userRepo;
 
@@ -62,6 +63,6 @@ public class LoginController {
                 e.printStackTrace();
             }
         }
-            return res;
+        return res;
     }
 }

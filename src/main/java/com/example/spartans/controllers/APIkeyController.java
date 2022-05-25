@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class APIkeyController {
     LogDriver log = new LogDriver();
     String className = "APIkeyController";
+
     @Autowired
     UserRepository userRepo;
 
@@ -78,7 +79,7 @@ public class APIkeyController {
         return res;
     }
 
-    public ResponseEntity<String> checkApiKey(String email, String apiKeyArg) {
+    public ResponseEntity<String> checkApiKey(String email, UserRepository userRepo, String apiKeyArg) {
         ResponseEntity<String> res = null;
 
         try {
