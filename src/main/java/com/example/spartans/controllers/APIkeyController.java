@@ -68,7 +68,7 @@ public class APIkeyController {
                         "{\"apiKey\": " + encodedKey + "\"}");
             } else {
                 res = ResponseEntity.status(401).body(
-                        "{\"message\": \"unauthorized\"}");
+                        this.message + "unauthorized\"}");
             }
         }
         return res;
