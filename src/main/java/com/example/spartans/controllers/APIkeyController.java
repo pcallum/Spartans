@@ -78,8 +78,7 @@ public class APIkeyController {
         return res;
     }
 
-    public ResponseEntity<String> checkApiKey(String email,
-            @RequestBody String apiKeyArg) {
+    public ResponseEntity<String> checkApiKey(String email, String apiKeyArg) {
         ResponseEntity<String> res = null;
 
         try {
