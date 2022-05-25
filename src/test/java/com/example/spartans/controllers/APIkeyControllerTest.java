@@ -1,3 +1,4 @@
+
 package com.example.spartans.controllers;
 
 import com.example.spartans.entities.User;
@@ -22,6 +23,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+
 @RunWith(SpringRunner.class)
 class APIkeyControllerTest {
 
@@ -38,7 +40,8 @@ class APIkeyControllerTest {
     void generateAPIkey() throws Exception {
         APIkeyController APIkeyController = new APIkeyController();
 
-        Method method = APIkeyController.class.getDeclaredMethod("generateAPIkey", null);
+        Method method = APIkeyController.class.getDeclaredMethod("generateAPIkey",
+                null);
         method.setAccessible(true);
         byte[] key = (byte[]) method.invoke(APIkeyController, null);
 
@@ -46,6 +49,5 @@ class APIkeyControllerTest {
         Assertions.assertTrue(generated);
 
     }
-
 
 }

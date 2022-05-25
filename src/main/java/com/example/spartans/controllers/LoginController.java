@@ -44,7 +44,7 @@ public class LoginController {
                 // otherwise we throw an error message
                 if (loginRequest.getPassword().equals(user.getPassword())) {
                     res = ResponseEntity.status(200).headers(headers).body(
-                            "{\"user\": \"" + user + "\"}");
+                            "{\"roleUser\": \"" + user.getRole() + "\"}");
                 } else {
                     res = ResponseEntity.status(401).headers(headers).body(
                             this.message + "password is wrong\"}");

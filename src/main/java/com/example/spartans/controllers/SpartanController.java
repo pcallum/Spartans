@@ -1,4 +1,5 @@
 package com.example.spartans.controllers;
+
 import com.example.spartans.entities.Spartan;
 import com.example.spartans.service.SpartanService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,13 @@ public class SpartanController {
     private SpartanService service;
 
     @PostMapping()
-    public Spartan addSpartan(@RequestBody Spartan spartan){
+    public Spartan addSpartan(@RequestBody Spartan spartan) {
         return service.addSpartan(spartan);
     }
 
     @GetMapping()
     public List<Spartan> getAllSpartans() {
+        // authorization
         return service.getAllSpartans();
     }
 
@@ -28,18 +30,19 @@ public class SpartanController {
     }
 
     @PutMapping()
-    public String updateSpartan(@RequestBody Spartan spartan){
+    public String updateSpartan(@RequestBody Spartan spartan) {
         return service.updateSpartan(spartan);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteSpartanById(@PathVariable String id){
+    public String deleteSpartanById(@PathVariable String id) {
         return service.deleteSpartanById(id);
     }
 
-    // cannot be "/{name}" only, as you cant tell if the string refers to the id or name
+    // cannot be "/{name}" only, as you cant tell if the string refers to the id or
+    // name
     @GetMapping("/name/{name}")
-    public List<Spartan> getByPartialName(@PathVariable String name){
+    public List<Spartan> getByPartialName(@PathVariable String name) {
         return service.getSpartanByPartialName(name, name);
     }
 

@@ -46,7 +46,7 @@ public class APIkeyController {
         res = LoginController.handleLogin(res, loginRequest, userRepo);
 
         // if one of the credentials is wrong we throw an error message
-        if (res.getStatusCodeValue() == 404 || res.getStatusCodeValue() == 401) {
+        if (res.getStatusCodeValue() != 200) {
             return res;
         }
 
@@ -83,7 +83,7 @@ public class APIkeyController {
         res = LoginController.handleLogin(res, loginRequest, userRepo);
 
         // if one of the credentials is wrong we throw an error message
-        if (res.getStatusCodeValue() == 404 || res.getStatusCodeValue() == 401) {
+        if (res.getStatusCodeValue() != 200) {
             return res;
         }
 

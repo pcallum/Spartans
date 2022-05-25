@@ -1,5 +1,5 @@
-package com.example.spartans.ControllerTest;
 
+package com.example.spartans.ControllerTest;
 
 import com.example.spartans.entities.Spartan;
 import com.example.spartans.repositories.SpartanRepository;
@@ -18,10 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
-
 @DataMongoTest
-//@SpringBootTest
+// @SpringBootTest
+
 @ExtendWith(SpringExtension.class)
+
 @Transactional
 public class SpartanTest {
 
@@ -30,8 +31,8 @@ public class SpartanTest {
 
     @Test
     public void checkSpartanIsFound() {
-        //Spartan spartan = new Spartan();
-        //spartanRepository.save(spartan);
+        // Spartan spartan = new Spartan();
+        // spartanRepository.save(spartan);
         Spartan result = spartanRepository.findById("628caae9342e5fbc7c4bd383").get();
         Assertions.assertEquals("Kelner", result.getLastName());
     }
@@ -49,7 +50,7 @@ public class SpartanTest {
     }
 
     @Test
-    public  void checkSpartanIsEdited() {
+    public void checkSpartanIsEdited() {
         Spartan spartan = new Spartan();
         spartan.setFirstName("michel");
         spartan.setLastName("jean");

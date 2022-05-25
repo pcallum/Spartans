@@ -9,9 +9,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableMongoRepositories("com.example.spartans.repositories")
 @ComponentScan("com.example.spartans.*")
 public class SpartansApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(SpartansApplication.class, args);
     }
-
 }
