@@ -4,11 +4,14 @@ import java.util.Optional;
 import com.example.spartans.entities.User;
 import com.example.spartans.payload.request.LoginRequest;
 import com.example.spartans.repositories.UserRepository;
+import com.example.spartans.util.LogDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
 public class LoginController {
+    LogDriver log = new LogDriver();
+    String className = "LoginController";
     @Autowired
     UserRepository userRepo;
 
@@ -51,7 +54,13 @@ public class LoginController {
                 }
             } catch (Exception e) {
                 res = ResponseEntity.status(500).headers(headers).body(
+<<<<<<< HEAD
+                        "{\"message\": \"something went wrong\"}");
+                log.error(className, "something went wrong:", e);
+                e.printStackTrace();
+=======
                         this.message + "something went wrong\"}");
+>>>>>>> 9848703c3ac63220f88661466550bf831080198f
             }
         }
         return res;

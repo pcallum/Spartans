@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.example.spartans.entities.User;
 import com.example.spartans.payload.request.LoginRequest;
 import com.example.spartans.repositories.UserRepository;
+import com.example.spartans.util.LogDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class APIkeyController {
+    LogDriver log = new LogDriver();
+    String className = "APIkeyController";
     @Autowired
     UserRepository userRepo;
 
@@ -32,6 +35,7 @@ public class APIkeyController {
             keyGen = KeyPairGenerator.getInstance("RSA");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
+            log.error(className, "Problem with key generator", e);
         }
         keyGen.initialize(2048);
         byte[] privateKey = keyGen.generateKeyPair().getPrivate().getEncoded();
@@ -115,5 +119,11 @@ public class APIkeyController {
             e.printStackTrace();
         }
         return res;
+    }
+
+    public static ResponseEntity<String> checkApiKey(String email, String password,
+            @RequestBody String apiKey) {
+        ResponseEntity<String> res = null;
+
     }
 }

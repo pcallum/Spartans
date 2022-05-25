@@ -4,6 +4,10 @@ import com.example.spartans.entities.Spartan;
 import com.example.spartans.service.SpartanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,4 +50,21 @@ public class SpartanController {
         return service.getSpartanByPartialName(name, name);
     }
 
+    @GetMapping("/date/{dateString}")
+    public List<Spartan> getAfterStartDate(@PathVariable String dateString){
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+            return service.getAfterStartDate(date);
+        }  catch (ParseException e) {
+            e.printStackTrace();
+            // the given string could not be converted to date
+        }
+
+        return null;
+    }
+
+    @GetMapping("/course/{course}")
+    public List<Spartan> getByCourse(@PathVariable String course) {
+        return service.findByCourse(course);
+    }
 }

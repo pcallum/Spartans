@@ -44,7 +44,7 @@ public class SpartanTest {
         spartan.setLastName("jean");
         spartan.setCourse("c#");
         spartan.setEmail("michel@gmail.com");
-        spartan.setStartDate("05/12/1999");
+//        spartan.setStartDate("05/12/1999");
         spartanRepository.save(spartan);
 
     }
@@ -56,7 +56,7 @@ public class SpartanTest {
         spartan.setLastName("jean");
         spartan.setCourse("c#");
         spartan.setEmail("michel@gmail.com");
-        spartan.setStartDate("05/12/1999");
+//        spartan.setStartDate("05/12/1999");
         spartanRepository.save(spartan);
         Spartan spartanUpdated = spartanRepository.findById("").get();
         Assertions.assertEquals("Updated jean", spartanUpdated.getLastName());
