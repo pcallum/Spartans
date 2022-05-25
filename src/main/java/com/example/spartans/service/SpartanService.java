@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,5 +78,16 @@ public class SpartanService {
 
     public List<Spartan> getSpartanByPartialName(String firstName, String lastName){
         return spartanRepo.findByFirstNameContainsOrLastNameContains(firstName, lastName);
+    }
+
+    public List<Spartan> getAfterStartDate(Date date){
+        Sort sort = Sort.by(Sort.Direction.ASC, "startDate");
+
+        return spartanRepo.findByStartDateAfter(date, sort);
+//        return spartanRepo.findByStartDateAfter(date);
+    }
+
+    public List<Spartan> findByCourse(String course){
+        return spartanRepo.findByCourse(course);
     }
 }
