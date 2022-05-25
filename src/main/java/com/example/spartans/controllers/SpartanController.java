@@ -1,8 +1,10 @@
 package com.example.spartans.controllers;
 
 import com.example.spartans.entities.Spartan;
+import com.example.spartans.payload.request.LoginRequest;
 import com.example.spartans.service.SpartanService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -23,8 +25,12 @@ public class SpartanController {
     }
 
     @GetMapping()
-    public List<Spartan> getAllSpartans() {
-        // authorization
+    public List<Spartan> getAllSpartans(@RequestBody LoginRequest loginRequest,
+                                        @RequestParam String api) {
+    // authorization
+        ResponseEntity<String> response = AuthorisationController.checkAuthorisation(loginRequest, api);
+        System.out.println(response);
+
         return service.getAllSpartans();
     }
 
