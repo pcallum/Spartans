@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.example.spartans.entities.User;
 import com.example.spartans.payload.request.LoginRequest;
 import com.example.spartans.repositories.UserRepository;
+import com.example.spartans.util.LogDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class APIkeyController {
+    LogDriver log = new LogDriver();
+    String className = "APIkeyController";
+
     @Autowired
     UserRepository userRepo;
 
@@ -32,6 +36,7 @@ public class APIkeyController {
             keyGen = KeyPairGenerator.getInstance("RSA");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
+            log.error(className, "Problem with key generator", e);
         }
         keyGen.initialize(2048);
         byte[] privateKey = keyGen.generateKeyPair().getPrivate().getEncoded();
@@ -46,7 +51,7 @@ public class APIkeyController {
         res = LoginController.handleLogin(res, loginRequest, userRepo);
 
         // if one of the credentials is wrong we throw an error message
-        if (res.getStatusCodeValue() == 404 || res.getStatusCodeValue() == 401) {
+        if (res.getStatusCodeValue() != 200) {
             return res;
         }
 
@@ -74,6 +79,33 @@ public class APIkeyController {
         return res;
     }
 
+    public ResponseEntity<String> checkApiKey(String email, UserRepository userRepo, String apiKeyArg) {
+        ResponseEntity<String> res = null;
+
+        try {
+            Optional<User> optionalUser = userRepo.findByEmail(email);
+            User user = optionalUser.get();
+
+            byte[] userApiKey = user.getApiKey();
+
+            if (userApiKey.equals(apiKeyArg)) {
+                res = ResponseEntity.status(200).body(
+                        this.message + " api key matches\"}");
+                return res;
+            } else {
+                res = ResponseEntity.status(401).body(
+                        this.message + " api key doesn't match\"}");
+                return res;
+            }
+
+        } catch (Exception e) {
+            res = ResponseEntity.status(500).body(
+                    this.message + " something went wrong\"}");
+            e.printStackTrace();
+        }
+        return res;
+    }
+
     @PatchMapping("/set-api-key/{id}")
     private ResponseEntity<String> setApiKey(@PathVariable String id,
             @RequestBody LoginRequest loginRequest) {
@@ -83,7 +115,7 @@ public class APIkeyController {
         res = LoginController.handleLogin(res, loginRequest, userRepo);
 
         // if one of the credentials is wrong we throw an error message
-        if (res.getStatusCodeValue() == 404 || res.getStatusCodeValue() == 401) {
+        if (res.getStatusCodeValue() != 200) {
             return res;
         }
 

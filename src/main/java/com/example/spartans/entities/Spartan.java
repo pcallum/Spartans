@@ -5,6 +5,7 @@ import com.mongodb.lang.NonNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
 import java.util.Objects;
 
 @Document(collection="spartans")
@@ -25,11 +26,11 @@ public class Spartan {
     public String email;
 
     @NonNull
-    public String startDate;
+    public Date startDate;
 
     public Spartan() {}
 
-    public Spartan(String id, String firstName, String lastName, String course, String email, String startDate, String role) {
+    public Spartan(String id, String firstName, String lastName, String course, String email, Date startDate) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -78,11 +79,11 @@ public class Spartan {
         this.email = email;
     }
 
-    public String getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 

@@ -2,16 +2,19 @@ package com.example.spartans.service;
 
 import com.example.spartans.entities.Spartan;
 import com.example.spartans.repositories.SpartanRepository;
+import com.example.spartans.util.LogDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class SpartanService {
+    LogDriver log = new LogDriver();
+    String className = "SpartanService";
     @Autowired
     private SpartanRepository spartanRepo;
 
@@ -20,6 +23,7 @@ public class SpartanService {
             return spartanRepo.save(spartan);
         } catch(IllegalArgumentException e) {
             // in case the given entity is null.
+            log.error(className, "something went wrong:", e);
             e.printStackTrace();
             return null;
         }
@@ -33,6 +37,7 @@ public class SpartanService {
         try {
             return spartanRepo.findById(id);
         } catch(IllegalArgumentException e) {
+            log.error(className, "something went wrong:", e);
             e.printStackTrace();
             return null;
         }
@@ -52,6 +57,7 @@ public class SpartanService {
         } catch(IllegalArgumentException e) {
             e.printStackTrace();
             message = "ID must not be null.";
+            log.error(className, "ID must not be null.", e);
         }
 
         return message;
@@ -71,6 +77,7 @@ public class SpartanService {
         } catch(IllegalArgumentException e) {
             e.printStackTrace();
             message = "ID must not be null.";
+            log.error(className, message, e);
         }
 
         return message;
@@ -78,5 +85,16 @@ public class SpartanService {
 
     public List<Spartan> getSpartanByPartialName(String firstName, String lastName){
         return spartanRepo.findByFirstNameContainsOrLastNameContains(firstName, lastName);
+    }
+
+    public List<Spartan> getAfterStartDate(Date date){
+        Sort sort = Sort.by(Sort.Direction.ASC, "startDate");
+
+        return spartanRepo.findByStartDateAfter(date, sort);
+//        return spartanRepo.findByStartDateAfter(date);
+    }
+
+    public List<Spartan> findByCourse(String course){
+        return spartanRepo.findByCourse(course);
     }
 }
