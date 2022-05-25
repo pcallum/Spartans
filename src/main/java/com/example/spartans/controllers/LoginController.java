@@ -15,6 +15,8 @@ public class LoginController {
     @Autowired
     UserRepository userRepo;
 
+    private final String message = "{\"message\": \"";
+
     // this function will be used to get a res so that we can verify if
     // the user is authenticated
     public static ResponseEntity<String> handleLogin(ResponseEntity<String> res,
@@ -36,7 +38,7 @@ public class LoginController {
         // if user is not found we throw an error message
         if (!optionalUser.isPresent()) {
             res = ResponseEntity.status(404).headers(headers).body(
-                    "{\"message\": \"email" + loginRequest.getEmail() + " not found\"}");
+                    this.message + "email" + loginRequest.getEmail() + " not found\"}");
         } else {
             try {
                 User user = optionalUser.get();
@@ -48,13 +50,17 @@ public class LoginController {
                             "{\"user\": \"" + user + "\"}");
                 } else {
                     res = ResponseEntity.status(401).headers(headers).body(
-                            "{\"message\": \"password is wrong\"}");
+                            this.message + "password is wrong\"}");
                 }
             } catch (Exception e) {
                 res = ResponseEntity.status(500).headers(headers).body(
+<<<<<<< HEAD
                         "{\"message\": \"something went wrong\"}");
                 log.error(className, "something went wrong:", e);
                 e.printStackTrace();
+=======
+                        this.message + "something went wrong\"}");
+>>>>>>> 9848703c3ac63220f88661466550bf831080198f
             }
         }
         return res;
