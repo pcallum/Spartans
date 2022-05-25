@@ -56,11 +56,20 @@ public class APIkeyController {
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            privateKey = user.getApiKey();
-            // sending API key as string in res
-            String encodedKey = Base64.getEncoder().encodeToString(privateKey);
-            res = ResponseEntity.status(200).body(
-                    "{\"apiKey\": " + encodedKey + "\"}");
+
+            // if role == admin & user id matches credentials used
+            // for logging in we display the API key
+            if (user.getEmail().equals(loginRequest.getEmail()) &&
+                    user.getRole().equals("admin")) {
+                privateKey = user.getApiKey();
+                // sending API key as string in res
+                String encodedKey = Base64.getEncoder().encodeToString(privateKey);
+                res = ResponseEntity.status(200).body(
+                        "{\"apiKey\": " + encodedKey + "\"}");
+            } else {
+                res = ResponseEntity.status(401).body(
+                        "{\"message\": \"unauthorized\"}");
+            }
         }
         return res;
     }
@@ -84,9 +93,11 @@ public class APIkeyController {
             if (optionalUser.isPresent()) {
                 User user = optionalUser.get();
 
-                // if the user has a role of admin we generate the API key,
-                // save it into the db and sending a res
-                if (user.getRole().equals("admin") && user.getEmail().equals(loginRequest.getEmail())) {
+                // if the user has a role of admin and the user id matches
+                // the credentials that are used for logging in we generate
+                // an API key and save it to the db
+                if (user.getRole().equals("admin") &&
+                        user.getEmail().equals(loginRequest.getEmail())) {
                     user.setApiKey(this.generateAPIkey());
                     userRepo.save(user);
                     res = ResponseEntity.status(201).body(
