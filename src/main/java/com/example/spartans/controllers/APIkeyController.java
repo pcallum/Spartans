@@ -1,9 +1,6 @@
 package com.example.spartans.controllers;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.security.KeyPairGenerator;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
@@ -101,11 +98,9 @@ public class APIkeyController {
             if (Arrays.equals(userApiKey, decodedArgKey)) {
                 res = ResponseEntity.status(200).body(
                         this.message + " api key matches\"}");
-                return res;
             } else {
                 res = ResponseEntity.status(401).body(
                         this.message + " api key doesn't match\"}");
-                return res;
             }
 
         } catch (Exception e) {
