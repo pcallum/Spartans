@@ -95,7 +95,10 @@ public class APIkeyController {
             byte[] userApiKey = user.getApiKey();
             byte[] decodedArgKey = Base64.getUrlDecoder().decode(apiKeyArg);
 
-            if (Arrays.equals(userApiKey, decodedArgKey)) {
+            if (userApiKey == null) {
+                res = ResponseEntity.status(401).body(
+                        this.message + "not authorized\"}");
+            } else if (Arrays.equals(userApiKey, decodedArgKey)) {
                 res = ResponseEntity.status(200).body(
                         this.message + " api key matches\"}");
             } else {
