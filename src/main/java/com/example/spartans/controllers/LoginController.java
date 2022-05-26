@@ -19,7 +19,12 @@ public class LoginController {
     public static ResponseEntity<String> handleLogin(ResponseEntity<String> res,
             LoginRequest loginRequest, UserRepository userRepo) {
         LoginController loginController = new LoginController();
-        res = loginController.login(userRepo, loginRequest);
+        try {
+            res = loginController.login(userRepo, loginRequest);
+        } catch (Exception e) {
+            res = ResponseEntity.status(500).body(
+                    "{\"message\": \"something went wrong\"}");
+        }
         return res;
     }
 
@@ -29,15 +34,16 @@ public class LoginController {
         headers.add("content-type", "application/json");
 
         ResponseEntity<String> res = null;
-        // finding user by email
-        Optional<User> optionalUser = userRepo.findByEmail(loginRequest.getEmail());
+        try {
+            // finding user by email
+            Optional<User> optionalUser = userRepo.findByEmail(loginRequest.getEmail());
 
-        // if user is not found we throw an error message
-        if (!optionalUser.isPresent()) {
-            res = ResponseEntity.status(404).headers(headers).body(
-                    this.message + "email" + loginRequest.getEmail() + " not found\"}");
-        } else {
-            try {
+            // if user is not found we throw an error message
+            if (!optionalUser.isPresent()) {
+                res = ResponseEntity.status(404).headers(headers).body(
+                        this.message + "email" + loginRequest.getEmail() + " not found\"}");
+            } else {
+
                 User user = optionalUser.get();
 
                 // if passwords match we send a res with the user inside
@@ -49,15 +55,13 @@ public class LoginController {
                     res = ResponseEntity.status(401).headers(headers).body(
                             this.message + "password is wrong\"}");
                 }
-            } catch (Exception e) {
-                res = ResponseEntity.status(500).headers(headers).body(
 
-                        this.message + "something went wrong\"}");
-
-                log.error(className, "something went wrong:", e);
-
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            res = ResponseEntity.status(500).headers(headers).body(
+                    this.message + "something went wrong\"}");
+            log.error(className, "something went wrong:", e);
+            e.printStackTrace();
         }
         return res;
     }
