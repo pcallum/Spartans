@@ -2,13 +2,12 @@ package com.example.spartans.controllers;
 
 import com.example.spartans.entities.AdminRequest;
 import com.example.spartans.entities.Spartan;
+import com.example.spartans.payload.request.AuthorisationController;
 import com.example.spartans.payload.request.LoginRequest;
 import com.example.spartans.repositories.UserRepository;
 import com.example.spartans.service.SpartanService;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
