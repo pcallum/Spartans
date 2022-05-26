@@ -1,7 +1,11 @@
 package com.example.spartans.controllers;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyPairGenerator;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Optional;
 import com.example.spartans.entities.User;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class APIkeyController {
     LogDriver log = new LogDriver();
     String className = "APIkeyController";
+
     @Autowired
     UserRepository userRepo;
 
@@ -50,7 +55,7 @@ public class APIkeyController {
         res = LoginController.handleLogin(res, loginRequest, userRepo);
 
         // if one of the credentials is wrong we throw an error message
-        if (res.getStatusCodeValue() == 404 || res.getStatusCodeValue() == 401) {
+        if (res.getStatusCodeValue() != 200) {
             return res;
         }
 
@@ -66,14 +71,45 @@ public class APIkeyController {
             if (user.getEmail().equals(loginRequest.getEmail()) &&
                     user.getRole().equals("admin")) {
                 privateKey = user.getApiKey();
-                // sending API key as string in res
-                String encodedKey = Base64.getEncoder().encodeToString(privateKey);
+                String encodedKey = Base64.getUrlEncoder().encodeToString(privateKey);
                 res = ResponseEntity.status(200).body(
-                        "{\"apiKey\": " + encodedKey + "\"}");
+                        "{\"apiKey\": \"" + encodedKey + "\"}");
             } else {
                 res = ResponseEntity.status(401).body(
                         this.message + "unauthorized\"}");
             }
+        }
+        return res;
+    }
+
+    public ResponseEntity<String> checkApiKey(String email, UserRepository userRepo, String apiKeyArg) {
+        ResponseEntity<String> res = null;
+
+        try {
+            Optional<User> optionalUser = userRepo.findByEmail(email);
+            User user = optionalUser.get();
+
+            byte[] userApiKey = user.getApiKey();
+            byte[] decodedArgKey = Base64.getUrlDecoder().decode(apiKeyArg);
+            // String strUserApiKey = Base64.getEncoder().encodeToString(userApiKey);
+
+            System.out.println("aaa " + userApiKey.toString());
+            System.out.println("bb " + apiKeyArg.toString());
+
+            if (Arrays.equals(userApiKey, decodedArgKey)) {
+                res = ResponseEntity.status(200).body(
+                        this.message + " api key matches\"}");
+                return res;
+            } else {
+                res = ResponseEntity.status(401).body(
+                        this.message + " api key doesn't match\"}");
+                return res;
+            }
+
+        } catch (Exception e) {
+            res = ResponseEntity.status(500).body(
+                    this.message + " something went wrong\"}");
+            e.printStackTrace();
         }
         return res;
     }
@@ -87,7 +123,7 @@ public class APIkeyController {
         res = LoginController.handleLogin(res, loginRequest, userRepo);
 
         // if one of the credentials is wrong we throw an error message
-        if (res.getStatusCodeValue() == 404 || res.getStatusCodeValue() == 401) {
+        if (res.getStatusCodeValue() != 200) {
             return res;
         }
 
@@ -102,7 +138,10 @@ public class APIkeyController {
                 // an API key and save it to the db
                 if (user.getRole().equals("admin") &&
                         user.getEmail().equals(loginRequest.getEmail())) {
-                    user.setApiKey(this.generateAPIkey());
+                    byte[] privateKey = this.generateAPIkey();
+                    // String encodedKey = Base64.getEncoder().encodeToString(privateKey);
+
+                    user.setApiKey(privateKey);
                     userRepo.save(user);
                     res = ResponseEntity.status(201).body(
                             this.message + "api key was set\"}");

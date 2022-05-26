@@ -5,15 +5,12 @@ import com.example.spartans.entities.User;
 import com.example.spartans.payload.request.LoginRequest;
 import com.example.spartans.repositories.UserRepository;
 import com.example.spartans.util.LogDriver;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
 public class LoginController {
     LogDriver log = new LogDriver();
     String className = "LoginController";
-    @Autowired
-    UserRepository userRepo;
 
     private final String message = "{\"message\": \"";
 
@@ -47,20 +44,19 @@ public class LoginController {
                 // otherwise we throw an error message
                 if (loginRequest.getPassword().equals(user.getPassword())) {
                     res = ResponseEntity.status(200).headers(headers).body(
-                            "{\"user\": \"" + user + "\"}");
+                            "{\"roleUser\": \"" + user.getRole() + "\"}");
                 } else {
                     res = ResponseEntity.status(401).headers(headers).body(
                             this.message + "password is wrong\"}");
                 }
             } catch (Exception e) {
                 res = ResponseEntity.status(500).headers(headers).body(
-<<<<<<< HEAD
-                        "{\"message\": \"something went wrong\"}");
-                log.error(className, "something went wrong:", e);
-                e.printStackTrace();
-=======
+
                         this.message + "something went wrong\"}");
->>>>>>> 9848703c3ac63220f88661466550bf831080198f
+
+                log.error(className, "something went wrong:", e);
+
+                e.printStackTrace();
             }
         }
         return res;
