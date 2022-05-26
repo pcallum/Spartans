@@ -5,6 +5,7 @@ import com.example.spartans.payload.request.LoginRequest;
 public class AdminRequest {
     private LoginRequest loginRequest;
     private Spartan spartan;
+    private String api;
 
     public LoginRequest getLoginRequest() {
         return loginRequest;
@@ -22,8 +23,11 @@ public class AdminRequest {
         this.spartan = spartan;
     }
 
-    public AdminRequest(LoginRequest loginRequest, Spartan spartan) {
-        this.loginRequest = loginRequest;
-        this.spartan = spartan;
+    public String getApi() {
+        return api;
+    }
+
+    public void setApi(String api) {
+        this.api = api;
     }
 }

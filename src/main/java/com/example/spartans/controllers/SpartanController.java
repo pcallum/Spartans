@@ -30,11 +30,11 @@ public class SpartanController {
     private UserRepository userRepo;
 
     @PostMapping()
-    public ResponseEntity<String> addSpartan(@RequestBody AdminRequest request,
-                                             @RequestParam String api) {
+    public ResponseEntity<String> addSpartan(@RequestBody AdminRequest request) {
         // extracting data from request
         LoginRequest login = request.getLoginRequest();
         Spartan spartan = request.getSpartan();
+        String api = request.getApi();
 
         // authorization
         ResponseEntity<String> response = AuthorisationController.checkAuthorisation(login, api, userRepo, true);
@@ -49,8 +49,12 @@ public class SpartanController {
     }
 
     @GetMapping()
-    public ResponseEntity<String> getAllSpartans(@RequestBody LoginRequest login,
-                                                 @RequestParam String api) {
+    public ResponseEntity<String> getAllSpartans(@RequestBody AdminRequest request) {
+        // extracting data from request
+        LoginRequest login = request.getLoginRequest();
+        Spartan spartan = request.getSpartan();
+        String api = request.getApi();
+
         // authorization
         ResponseEntity<String> response = AuthorisationController.checkAuthorisation(login, api, userRepo, false);
 
@@ -63,8 +67,12 @@ public class SpartanController {
 
     @GetMapping("/{id}")
     public ResponseEntity<String> getSpartan(@PathVariable String id,
-                                             @RequestBody LoginRequest login,
-                                             @RequestParam String api) {
+                                             @RequestBody AdminRequest request) {
+        // extracting data from request
+        LoginRequest login = request.getLoginRequest();
+        Spartan spartan = request.getSpartan();
+        String api = request.getApi();
+
         // authorization
         ResponseEntity<String> response = AuthorisationController.checkAuthorisation(login, api, userRepo, false);
 
@@ -76,10 +84,11 @@ public class SpartanController {
     }
 
     @PutMapping()
-    public ResponseEntity<String> updateSpartan(@RequestBody AdminRequest request,
-                                @RequestParam String api) {
+    public ResponseEntity<String> updateSpartan(@RequestBody AdminRequest request) {
+        // extracting data from request
         LoginRequest login = request.getLoginRequest();
         Spartan spartan = request.getSpartan();
+        String api = request.getApi();
 
         // authorization
         ResponseEntity<String> response = AuthorisationController.checkAuthorisation(login, api, userRepo, true);
@@ -93,8 +102,12 @@ public class SpartanController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteSpartanById(@PathVariable String id,
-                                                    @RequestBody LoginRequest login,
-                                                    @RequestParam String api) {
+                                                    @RequestBody AdminRequest request) {
+        // extracting data from request
+        LoginRequest login = request.getLoginRequest();
+        Spartan spartan = request.getSpartan();
+        String api = request.getApi();
+
         // authorization
         ResponseEntity<String> response = AuthorisationController.checkAuthorisation(login, api, userRepo, true);
 
@@ -110,8 +123,12 @@ public class SpartanController {
     // name
     @GetMapping("/name/{name}")
     public ResponseEntity<String> getByPartialName(@PathVariable String name,
-                                                   @RequestBody LoginRequest login,
-                                                   @RequestParam String api) {
+                                                   @RequestBody AdminRequest request) {
+        // extracting data from request
+        LoginRequest login = request.getLoginRequest();
+        Spartan spartan = request.getSpartan();
+        String api = request.getApi();
+
         // authorization
         ResponseEntity<String> response = AuthorisationController.checkAuthorisation(login, api, userRepo, false);
 
@@ -124,8 +141,12 @@ public class SpartanController {
 
     @GetMapping("/date/{dateString}")
     public ResponseEntity<String> getAfterStartDate(@PathVariable String dateString,
-                                                    @RequestBody LoginRequest login,
-                                                    @RequestParam String api) {
+                                                    @RequestBody AdminRequest request) {
+        // extracting data from request
+        LoginRequest login = request.getLoginRequest();
+        Spartan spartan = request.getSpartan();
+        String api = request.getApi();
+
         // authorisation
         ResponseEntity<String> response = AuthorisationController.checkAuthorisation(login, api, userRepo, false);
 
@@ -147,8 +168,12 @@ public class SpartanController {
 
     @GetMapping("/course/{course}")
     public ResponseEntity<String> getByCourse(@PathVariable String course,
-                                              @RequestBody LoginRequest login,
-                                              @RequestParam String api) {
+                                              @RequestBody AdminRequest request) {
+        // extracting data from request
+        LoginRequest login = request.getLoginRequest();
+        Spartan spartan = request.getSpartan();
+        String api = request.getApi();
+
         // authorisation
         ResponseEntity<String> response = AuthorisationController.checkAuthorisation(login, api, userRepo, false);
 
