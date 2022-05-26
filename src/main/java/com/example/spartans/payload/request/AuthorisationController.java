@@ -1,5 +1,7 @@
-package com.example.spartans.controllers;
+package com.example.spartans.payload.request;
 
+import com.example.spartans.controllers.APIkeyController;
+import com.example.spartans.controllers.LoginController;
 import com.example.spartans.payload.request.LoginRequest;
 import com.example.spartans.repositories.UserRepository;
 import org.springframework.http.ResponseEntity;
