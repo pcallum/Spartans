@@ -37,11 +37,12 @@ class SpartanTest {
     @Test
     void addSpartan() {
         Spartan spartan = new Spartan();
+
         spartan.setFirstName("michel");
         spartan.setLastName("jean");
         spartan.setCourse("c#");
         spartan.setEmail("michel@gmail.com");
-        spartan.setStartDate("05/12/1999");
+        //spartan.setStartDate("05/12/1999");
         spartanRepository.save(spartan);
         Assertions.assertEquals("michel", spartan.getFirstName());
     }
@@ -49,11 +50,12 @@ class SpartanTest {
     @Test
     void checkSpartanIsEdited() {
         Spartan spartan = new Spartan();
+
         spartan.setId("628caae9342e5fbc7c4bd383");
         spartan.setFirstName("Adriena updated");
         spartanRepository.save(spartan);
-        Spartan spartanUpdated = spartanRepository.findById("628caae9342e5fbc7c4bd383").get();
-        Assertions.assertEquals("Adriena updated", spartanUpdated.getFirstName());
+        Mockito.when(spartanRepository.findById("628caae9342e5fbc7c4bd383")).thenReturn(Optional.of(spartan));
+        Assertions.assertEquals("Adriena updated", spartan.getFirstName());
     }
 
     @Test
