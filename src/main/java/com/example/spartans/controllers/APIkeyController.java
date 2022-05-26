@@ -2,11 +2,13 @@ package com.example.spartans.controllers;
 
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Optional;
 import com.example.spartans.entities.User;
 import com.example.spartans.payload.request.LoginRequest;
 import com.example.spartans.repositories.UserRepository;
+import com.example.spartans.util.LogDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class APIkeyController {
+    LogDriver log = new LogDriver();
+    String className = "APIkeyController";
+
     @Autowired
     UserRepository userRepo;
 
@@ -32,6 +37,7 @@ public class APIkeyController {
             keyGen = KeyPairGenerator.getInstance("RSA");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
+            log.error(className, "Problem with key generator", e);
         }
         keyGen.initialize(2048);
         byte[] privateKey = keyGen.generateKeyPair().getPrivate().getEncoded();
@@ -42,34 +48,65 @@ public class APIkeyController {
     private ResponseEntity<String> getApiKey(@PathVariable String id, @RequestBody LoginRequest loginRequest) {
         ResponseEntity<String> res = null;
 
-        // checking if credentials are right
-        res = LoginController.handleLogin(res, loginRequest, userRepo);
+        try {
+            // checking if credentials are right
+            res = LoginController.handleLogin(res, loginRequest, userRepo);
 
-        // if one of the credentials is wrong we throw an error message
-        if (res.getStatusCodeValue() == 404 || res.getStatusCodeValue() == 401) {
-            return res;
+            // if one of the credentials is wrong we throw an error message
+            if (res.getStatusCodeValue() != 200) {
+                return res;
+            }
+
+            byte[] privateKey = null;
+            // finding the user by id so that we can get the API key from db
+            Optional<User> optionalUser = userRepo.findById(id);
+
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+
+                // if role == admin & user id matches credentials used
+                // for logging in we display the API key
+                if (user.getEmail().equals(loginRequest.getEmail()) &&
+                        user.getRole().equals("admin")) {
+                    privateKey = user.getApiKey();
+                    String encodedKey = Base64.getUrlEncoder().encodeToString(privateKey);
+                    res = ResponseEntity.status(200).body(
+                            "{\"apiKey\": \"" + encodedKey + "\"}");
+                } else {
+                    res = ResponseEntity.status(401).body(
+                            this.message + "unauthorized\"}");
+                }
+            }
+        } catch (Exception e) {
+            res = ResponseEntity.status(500).body(
+                    this.message + "something went wrong\"}");
+            e.printStackTrace();
         }
+        return res;
+    }
 
-        byte[] privateKey = null;
-        // finding the user by id so that we can get the API key from db
-        Optional<User> optionalUser = userRepo.findById(id);
+    public ResponseEntity<String> checkApiKey(String email, UserRepository userRepo, String apiKeyArg) {
+        ResponseEntity<String> res = null;
 
-        if (optionalUser.isPresent()) {
+        try {
+            Optional<User> optionalUser = userRepo.findByEmail(email);
             User user = optionalUser.get();
 
-            // if role == admin & user id matches credentials used
-            // for logging in we display the API key
-            if (user.getEmail().equals(loginRequest.getEmail()) &&
-                    user.getRole().equals("admin")) {
-                privateKey = user.getApiKey();
-                // sending API key as string in res
-                String encodedKey = Base64.getEncoder().encodeToString(privateKey);
+            byte[] userApiKey = user.getApiKey();
+            byte[] decodedArgKey = Base64.getUrlDecoder().decode(apiKeyArg);
+
+            if (Arrays.equals(userApiKey, decodedArgKey)) {
                 res = ResponseEntity.status(200).body(
-                        "{\"apiKey\": " + encodedKey + "\"}");
+                        this.message + " api key matches\"}");
             } else {
                 res = ResponseEntity.status(401).body(
-                        "{\"message\": \"unauthorized\"}");
+                        this.message + " api key doesn't match\"}");
             }
+
+        } catch (Exception e) {
+            res = ResponseEntity.status(500).body(
+                    this.message + " something went wrong\"}");
+            e.printStackTrace();
         }
         return res;
     }
@@ -83,7 +120,7 @@ public class APIkeyController {
         res = LoginController.handleLogin(res, loginRequest, userRepo);
 
         // if one of the credentials is wrong we throw an error message
-        if (res.getStatusCodeValue() == 404 || res.getStatusCodeValue() == 401) {
+        if (res.getStatusCodeValue() != 200) {
             return res;
         }
 
@@ -98,7 +135,8 @@ public class APIkeyController {
                 // an API key and save it to the db
                 if (user.getRole().equals("admin") &&
                         user.getEmail().equals(loginRequest.getEmail())) {
-                    user.setApiKey(this.generateAPIkey());
+                    byte[] privateKey = this.generateAPIkey();
+                    user.setApiKey(privateKey);
                     userRepo.save(user);
                     res = ResponseEntity.status(201).body(
                             this.message + "api key was set\"}");
