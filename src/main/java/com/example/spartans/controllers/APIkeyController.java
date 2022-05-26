@@ -1,9 +1,6 @@
 package com.example.spartans.controllers;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.security.KeyPairGenerator;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
@@ -51,33 +48,39 @@ public class APIkeyController {
     private ResponseEntity<String> getApiKey(@PathVariable String id, @RequestBody LoginRequest loginRequest) {
         ResponseEntity<String> res = null;
 
-        // checking if credentials are right
-        res = LoginController.handleLogin(res, loginRequest, userRepo);
+        try {
+            // checking if credentials are right
+            res = LoginController.handleLogin(res, loginRequest, userRepo);
 
-        // if one of the credentials is wrong we throw an error message
-        if (res.getStatusCodeValue() != 200) {
-            return res;
-        }
-
-        byte[] privateKey = null;
-        // finding the user by id so that we can get the API key from db
-        Optional<User> optionalUser = userRepo.findById(id);
-
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-
-            // if role == admin & user id matches credentials used
-            // for logging in we display the API key
-            if (user.getEmail().equals(loginRequest.getEmail()) &&
-                    user.getRole().equals("admin")) {
-                privateKey = user.getApiKey();
-                String encodedKey = Base64.getUrlEncoder().encodeToString(privateKey);
-                res = ResponseEntity.status(200).body(
-                        "{\"apiKey\": \"" + encodedKey + "\"}");
-            } else {
-                res = ResponseEntity.status(401).body(
-                        this.message + "unauthorized\"}");
+            // if one of the credentials is wrong we throw an error message
+            if (res.getStatusCodeValue() != 200) {
+                return res;
             }
+
+            byte[] privateKey = null;
+            // finding the user by id so that we can get the API key from db
+            Optional<User> optionalUser = userRepo.findById(id);
+
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+
+                // if role == admin & user id matches credentials used
+                // for logging in we display the API key
+                if (user.getEmail().equals(loginRequest.getEmail()) &&
+                        user.getRole().equals("admin")) {
+                    privateKey = user.getApiKey();
+                    String encodedKey = Base64.getUrlEncoder().encodeToString(privateKey);
+                    res = ResponseEntity.status(200).body(
+                            "{\"apiKey\": \"" + encodedKey + "\"}");
+                } else {
+                    res = ResponseEntity.status(401).body(
+                            this.message + "unauthorized\"}");
+                }
+            }
+        } catch (Exception e) {
+            res = ResponseEntity.status(500).body(
+                    this.message + "something went wrong\"}");
+            e.printStackTrace();
         }
         return res;
     }
@@ -91,19 +94,16 @@ public class APIkeyController {
 
             byte[] userApiKey = user.getApiKey();
             byte[] decodedArgKey = Base64.getUrlDecoder().decode(apiKeyArg);
-            // String strUserApiKey = Base64.getEncoder().encodeToString(userApiKey);
 
-            System.out.println("aaa " + userApiKey.toString());
-            System.out.println("bb " + apiKeyArg.toString());
-
-            if (Arrays.equals(userApiKey, decodedArgKey)) {
+            if (userApiKey == null) {
+                res = ResponseEntity.status(401).body(
+                        this.message + "not authorized\"}");
+            } else if (Arrays.equals(userApiKey, decodedArgKey)) {
                 res = ResponseEntity.status(200).body(
                         this.message + " api key matches\"}");
-                return res;
             } else {
                 res = ResponseEntity.status(401).body(
                         this.message + " api key doesn't match\"}");
-                return res;
             }
 
         } catch (Exception e) {
@@ -139,8 +139,6 @@ public class APIkeyController {
                 if (user.getRole().equals("admin") &&
                         user.getEmail().equals(loginRequest.getEmail())) {
                     byte[] privateKey = this.generateAPIkey();
-                    // String encodedKey = Base64.getEncoder().encodeToString(privateKey);
-
                     user.setApiKey(privateKey);
                     userRepo.save(user);
                     res = ResponseEntity.status(201).body(
