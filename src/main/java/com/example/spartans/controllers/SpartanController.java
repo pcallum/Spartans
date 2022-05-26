@@ -1,8 +1,7 @@
 package com.example.spartans.controllers;
 
-import com.example.spartans.entities.AdminRequest;
+import com.example.spartans.payload.request.AdminRequest;
 import com.example.spartans.entities.Spartan;
-import com.example.spartans.payload.request.AuthorisationController;
 import com.example.spartans.payload.request.LoginRequest;
 import com.example.spartans.repositories.UserRepository;
 import com.example.spartans.service.SpartanService;
