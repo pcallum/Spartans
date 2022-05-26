@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 public class AuthorisationController {
     public static ResponseEntity<String> checkAuthorisation(LoginRequest login, String apiKey,
-            UserRepository userRepo) {
+            UserRepository userRepo, boolean restricted) {
         APIkeyController apiController = new APIkeyController();
 
         ResponseEntity<String> res = null;
@@ -19,8 +19,10 @@ public class AuthorisationController {
             return res;
         }
 
-        // checking API key
-        res = apiController.checkApiKey(login.getEmail(), userRepo, apiKey);
+        // if the request restricted (to admin only), check API Key
+        if (restricted) {
+            res = apiController.checkApiKey(login.getEmail(), userRepo, apiKey);
+        }
 
         return res;
     }

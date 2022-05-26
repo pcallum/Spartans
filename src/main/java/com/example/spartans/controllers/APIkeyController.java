@@ -39,6 +39,7 @@ public class APIkeyController {
             e.printStackTrace();
             log.error(className, "Problem with key generator", e);
         }
+        // sonar link says that this is the right size to use
         keyGen.initialize(2048);
         byte[] privateKey = keyGen.generateKeyPair().getPrivate().getEncoded();
         return privateKey;
