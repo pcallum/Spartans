@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
-public class APIkeyController {
+public class ApiKeyController {
     LogDriver log = new LogDriver();
     String className = "APIkeyController";
 

@@ -40,9 +40,9 @@ class APIkeyControllerTest {
 
     @Test
     void generateAPIkey() throws Exception {
-        APIkeyController APIkeyController = new APIkeyController();
+        ApiKeyController APIkeyController = new ApiKeyController();
 
-        Method method = APIkeyController.class.getDeclaredMethod("generateAPIkey", null);
+        Method method = ApiKeyController.class.getDeclaredMethod("generateAPIkey", null);
         method.setAccessible(true);
         byte[] key = (byte[]) method.invoke(APIkeyController, null);
 
@@ -54,7 +54,7 @@ class APIkeyControllerTest {
 
     @Test
     void getApiKey() throws Exception {
-        APIkeyController APIkeyController = spy(new APIkeyController());
+        ApiKeyController APIkeyController = spy(new ApiKeyController());
         APIkeyController.userRepo = applicationContext.getBean(UserRepository.class);
         User user = new User("628ca23c64b79fb389ff9ab3", "ahaglington2@washington.edu", "1YgxO9", null, "admin");
         Mockito.when(mockRepository.findById("1")).thenReturn(Optional.of(user));
@@ -66,7 +66,7 @@ class APIkeyControllerTest {
         doReturn(Optional.of(user)).when(mockRepository).findByEmail(user.getEmail());
 
         Mockito.doReturn(201).when(res).getStatusCodeValue();
-        Method method = APIkeyController.class.getDeclaredMethod("getApiKey", String.class, LoginRequest.class);
+        Method method = ApiKeyController.class.getDeclaredMethod("getApiKey", String.class, LoginRequest.class);
         method.setAccessible(true);
 
         ResponseEntity<String> response = (ResponseEntity<String>) method.invoke(APIkeyController, "628ca23c64b79fb389ff9ab3", loginRequest);
@@ -78,7 +78,7 @@ class APIkeyControllerTest {
 
     @Test
     void setApiKey() throws Exception {
-        APIkeyController APIkeyController = spy(new APIkeyController());
+        ApiKeyController APIkeyController = spy(new ApiKeyController());
         APIkeyController.userRepo = applicationContext.getBean(UserRepository.class);
         User user = new User("628ca23c64b79fb389ff9ab3", "ahaglington2@washington.edu", "1YgxO9", null, "admin");
         Mockito.when(mockRepository.findById("1")).thenReturn(Optional.of(user));
@@ -89,7 +89,7 @@ class APIkeyControllerTest {
         ResponseEntity<String> responseEntity = new ResponseEntity<>(HttpStatus.OK);
         doReturn(Optional.of(user)).when(mockRepository).findByEmail(user.getEmail());
         Mockito.doReturn(201).when(res).getStatusCodeValue();
-        Method method = APIkeyController.class.getDeclaredMethod("setApiKey", String.class, LoginRequest.class);
+        Method method = ApiKeyController.class.getDeclaredMethod("setApiKey", String.class, LoginRequest.class);
         method.setAccessible(true);
         ResponseEntity<String> response = (ResponseEntity<String>) method.invoke(APIkeyController, "628ca23c64b79fb389ff9ab3", loginRequest);
         System.out.println(response.getStatusCodeValue());
