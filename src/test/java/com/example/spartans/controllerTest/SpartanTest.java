@@ -1,4 +1,4 @@
-package com.example.spartans.ControllerTest;
+/* package com.example.spartans.ControllerTest;
 
 import com.example.spartans.controllers.SpartanController;
 import com.example.spartans.entities.Spartan;
@@ -59,4 +59,4 @@ class SpartanTest {
         boolean result = spartanRepository.findById("628caae9342e5fbc7c4bd383").isEmpty();
         Assertions.assertTrue(result);
     }
-}
+} */

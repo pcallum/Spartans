@@ -41,16 +41,21 @@ public class LoginController {
             // if user is not found we throw an error message
             if (!optionalUser.isPresent()) {
                 res = ResponseEntity.status(404).headers(headers).body(
-                        this.message + "email" + loginRequest.getEmail() + " not found\"}");
+                        this.message + "email " + loginRequest.getEmail() + " not found\"}");
             } else {
 
                 User user = optionalUser.get();
 
+                // checking if hashed password in db matches the input of the user
+                HashPasswordController hpc = new HashPasswordController();
+                boolean passwordMatches = hpc.validatePassword(loginRequest.getPassword(),
+                        user.getPassword());
+
                 // if passwords match we send a res with the user inside
                 // otherwise we throw an error message
-                if (loginRequest.getPassword().equals(user.getPassword())) {
+                if (passwordMatches) {
                     res = ResponseEntity.status(200).headers(headers).body(
-                            "{\"roleUser\": \"" + user.getRole() + "\"}");
+                            "{\"user\": \"" + user + "\"}");
                 } else {
                     res = ResponseEntity.status(401).headers(headers).body(
                             this.message + "password is wrong\"}");
