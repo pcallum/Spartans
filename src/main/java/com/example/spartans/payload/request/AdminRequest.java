@@ -1,5 +1,6 @@
-package com.example.spartans.entities;
+package com.example.spartans.payload.request;
 
+import com.example.spartans.entities.Spartan;
 import com.example.spartans.payload.request.LoginRequest;
 
 public class AdminRequest {

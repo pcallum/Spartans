@@ -1,4 +1,4 @@
-package com.example.spartans.payload.request;
+package com.example.spartans.controllers;
 
 import com.example.spartans.controllers.APIkeyController;
 import com.example.spartans.controllers.LoginController;
